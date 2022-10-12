@@ -17,18 +17,15 @@ export class Astromik {
     this.express = express;
   }
 
-  private async setupRoutes() {
+  private async setupRoutes(directory: Directory, root: boolean = false) {
     // check & create directory
-    if (!fs.existsSync(this.routeDirectory)) fs.mkdirSync(this.routeDirectory);
-
-    // get directory structure
-    const routesDir = new Directory(this.routeDirectory);
+    if (!fs.existsSync(directory.path)) return;
 
     const routeFiles: File[] = [];
     const dynamicRouteFiles: File[] = [];
 
     // sperarate dynamic routes
-    for (const item of routesDir.items) {
+    for (const item of directory.items) {
       if (item.name.match(/\[[a-z]+\]/)) {
         dynamicRouteFiles.push(item);
       } else {
@@ -36,29 +33,56 @@ export class Astromik {
       }
     }
 
+    const prefix = directory.path
+      .replace(this.routeDirectory, "")
+      .replace(/\[/g, ":")
+      .replace(/\]/g, "");
+
     // register normal routes
     for (const file of routeFiles) {
-      if (file.isDirectory) continue;
-      const fileName = Path.parse(file.path).name;
-      const route = fileName === "index" ? "" : fileName;
+      if (file.isDirectory) {
+        await this.setupRoutes(file as Directory);
+        continue;
+      }
+      const fileName = file.name;
+      const route = Path.join(
+        "/",
+        root ? "" : prefix,
+        fileName.match(/index.(ts|js)$/)
+          ? ""
+          : fileName.replace(/.ts$|.js$/, "")
+      );
 
       await this.registerRoute(route, file);
     }
 
     // register dynamic routes
     for (const file of dynamicRouteFiles) {
-      if (file.isDirectory) continue;
+      if (file.isDirectory) {
+        await this.setupRoutes(file as Directory);
+        continue;
+      }
       const fileName = Path.parse(file.path).name;
-      const route = `:${fileName.replace(/[\[\]]/g, "")}`;
+      const route = Path.join(
+        "/",
+        root ? "" : prefix,
+        `:${fileName.replace(/[\[\]]/g, "")}`
+      );
 
       await this.registerRoute(route, file);
     }
 
     // fallback route
-    this.express.use((_, res) => res.sendStatus(404));
+    // this.express.use((_, res) => res.sendStatus(404));
   }
 
   private async registerRoute(route: string, file: File) {
+    console.log(
+      `register route: '${route}'\t\t\t => '${file.path.replace(
+        /.ts$|.js$/,
+        ""
+      )}'`
+    );
     try {
       // dynamicly import handler
       const RouteHandler: typeof Route = (
@@ -68,29 +92,36 @@ export class Astromik {
       const handler: Route = new RouteHandler();
 
       // register http methods
-      this.express.get(`/${route}`, (req, res) => {
+      this.express.get(route, (req, res) => {
+        console.log("GET: " + route);
         handler.init(req, res);
         handler.GET();
       });
-      this.express.post(`/${route}`, (req, res) => {
+      this.express.post(route, (req, res) => {
+        console.log("POST: " + route);
         handler.init(req, res);
         handler.POST();
       });
-      this.express.patch(`/${route}`, (req, res) => {
+      this.express.patch(route, (req, res) => {
+        console.log("PATCH: " + route);
         handler.init(req, res);
         handler.PATCH();
       });
-      this.express.delete(`/${route}`, (req, res) => {
+      this.express.delete(route, (req, res) => {
+        console.log("DELETE: " + route);
         handler.init(req, res);
         handler.DELETE();
       });
-    } catch {
+    } catch (error: any) {
+      console.log(error);
       return;
     }
   }
 
   public start(port: number, callback?: () => void) {
-    this.setupRoutes();
-    this.express.listen(port, callback);
+    this.setupRoutes(new Directory(this.routeDirectory), true).then(() => {
+      // this.express.use((_, res) => res.sendStatus(404));
+      this.express.listen(port, callback);
+    });
   }
 }
