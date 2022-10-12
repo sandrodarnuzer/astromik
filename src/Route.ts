@@ -10,15 +10,15 @@ export class Route {
   }
 
   GET() {
-    response.sendStatus(404);
+    this.response.sendStatus(404);
   }
   POST() {
-    response.sendStatus(404);
+    this.response.sendStatus(404);
   }
   PATCH() {
-    response.sendStatus(404);
+    this.response.sendStatus(404);
   }
   DELETE() {
-    response.sendStatus(404);
+    this.response.sendStatus(404);
   }
 }

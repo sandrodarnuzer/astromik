@@ -1,13 +1,15 @@
 import { Express } from "express";
-import fs, { PathLike } from "fs";
+import fs from "fs";
 import { Directory, File } from "./file";
-import { Route } from "./Route";
+import { Route } from "./route";
 import Path from "path";
 
 const CWD = process.cwd();
-const ROUTES_DIR_PATH = Path.join(CWD, "src", "routes");
+const ROUTES_DIR_PATH = Path.join(CWD, "routes");
 
-export class Lib {
+export { Route } from "./route";
+
+export class Astromik {
   private express: Express;
   private routeDirectory: string = ROUTES_DIR_PATH;
 
@@ -60,8 +62,9 @@ export class Lib {
     try {
       // dynamicly import handler
       const RouteHandler: typeof Route = (
-        await import(file.path.replace(".ts", ""))
+        await import(file.path.replace(/.ts$|.js$/, ""))
       ).default;
+
       const handler: Route = new RouteHandler();
 
       // register http methods
