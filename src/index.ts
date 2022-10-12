@@ -33,6 +33,7 @@ export class Astromik {
       }
     }
 
+    // resolve path prefix from parent folders
     const prefix = directory.path
       .replace(this.routeDirectory, "")
       .replace(/\[/g, ":")
@@ -71,18 +72,10 @@ export class Astromik {
 
       await this.registerRoute(route, file);
     }
-
-    // fallback route
-    // this.express.use((_, res) => res.sendStatus(404));
   }
 
   private async registerRoute(route: string, file: File) {
-    console.log(
-      `register route: '${route}'\t\t\t => '${file.path.replace(
-        /.ts$|.js$/,
-        ""
-      )}'`
-    );
+    console.log(`register route: '${route}'`);
     try {
       // dynamicly import handler
       const RouteHandler: typeof Route = (
@@ -93,22 +86,18 @@ export class Astromik {
 
       // register http methods
       this.express.get(route, (req, res) => {
-        console.log("GET: " + route);
         handler.init(req, res);
         handler.GET();
       });
       this.express.post(route, (req, res) => {
-        console.log("POST: " + route);
         handler.init(req, res);
         handler.POST();
       });
       this.express.patch(route, (req, res) => {
-        console.log("PATCH: " + route);
         handler.init(req, res);
         handler.PATCH();
       });
       this.express.delete(route, (req, res) => {
-        console.log("DELETE: " + route);
         handler.init(req, res);
         handler.DELETE();
       });
@@ -120,7 +109,6 @@ export class Astromik {
 
   public start(port: number, callback?: () => void) {
     this.setupRoutes(new Directory(this.routeDirectory), true).then(() => {
-      // this.express.use((_, res) => res.sendStatus(404));
       this.express.listen(port, callback);
     });
   }
