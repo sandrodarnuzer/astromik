@@ -1,24 +1,29 @@
-import { Request, request, Response, response } from "express";
+import { HttpMethod, ReqResFunction, Methods } from "./utils";
+export { Request, Response } from "express";
 
 export class Route {
-  protected request = request;
-  protected response = response;
+  private GET?: ReqResFunction;
+  private POST?: ReqResFunction;
+  private PATCH?: ReqResFunction;
+  private DELETE?: ReqResFunction;
 
-  init(request: Request, response: Response) {
-    this.request = request;
-    this.response = response;
-  }
+  readonly methods: Methods = {
+    GET: this.GET,
+    POST: this.POST,
+    PATCH: this.PATCH,
+    DELETE: this.DELETE,
+  };
+}
 
-  GET() {
-    this.response.sendStatus(404);
-  }
-  POST() {
-    this.response.sendStatus(404);
-  }
-  PATCH() {
-    this.response.sendStatus(404);
-  }
-  DELETE() {
-    this.response.sendStatus(404);
-  }
+export function Method<T extends ReqResFunction>(method: HttpMethod) {
+  return function (
+    target: Route,
+    key: string | symbol,
+    descriptor: TypedPropertyDescriptor<T>
+  ): void {
+    const original = descriptor.value;
+    Object.defineProperty(target, method, {
+      value: original,
+    });
+  };
 }
