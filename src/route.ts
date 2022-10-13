@@ -7,12 +7,14 @@ export class Route {
   private PATCH?: ReqResFunction;
   private DELETE?: ReqResFunction;
 
-  readonly methods: Methods = {
-    GET: this.GET,
-    POST: this.POST,
-    PATCH: this.PATCH,
-    DELETE: this.DELETE,
-  };
+  get methods(): Methods {
+    return {
+      GET: this.GET,
+      POST: this.POST,
+      PATCH: this.PATCH,
+      DELETE: this.DELETE,
+    };
+  }
 }
 
 export function Method<T extends ReqResFunction>(method: HttpMethod) {

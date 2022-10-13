@@ -76,19 +76,18 @@ export class Astromik {
   }
 
   private async registerRoute(route: string, file: File) {
-    console.log(`register route: '${route}'`);
     try {
       // dynamicly import handler
-      const RouteHandler: typeof Route = (
+      const handler: typeof Route = (
         await import(file.path.replace(/.ts$|.js$/, ""))
       ).default;
-      console.log(typeof Route);
-      const handler: Route = new RouteHandler();
 
       // register http methods
-      for (const entry of Object.entries(handler.methods)) {
+      for (const entry of Object.entries(handler.prototype.methods)) {
         const method = entry[0] as HttpMethod;
         const func = entry[1];
+
+        if (!func) continue;
 
         switch (method) {
           case "GET":
@@ -104,6 +103,7 @@ export class Astromik {
             this.express.delete(route, func);
             break;
         }
+        console.log(`${method} ${route}`);
       }
     } catch (error: any) {
       console.log(error);
