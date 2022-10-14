@@ -3,15 +3,15 @@ import fs from "fs";
 import { Directory, File } from "./file";
 import { Route } from "./route";
 import Path from "path";
+import { HttpMethod } from "./utils";
 
-const CWD = process.cwd();
-const ROUTES_DIR_PATH = Path.join(CWD, "routes");
+export { Route, Request, Response, Method } from "./route";
 
-export { Route } from "./route";
+const ROUTES_DIRECTORY = Path.join(Path.dirname(process.argv[1]), "routes");
 
 export class Astromik {
   private express: Express;
-  private routeDirectory: string = ROUTES_DIR_PATH;
+  private routeDirectory: string = ROUTES_DIRECTORY;
 
   constructor(express: Express) {
     this.express = express;
@@ -75,32 +75,44 @@ export class Astromik {
   }
 
   private async registerRoute(route: string, file: File) {
-    console.log(`register route: '${route}'`);
     try {
       // dynamicly import handler
-      const RouteHandler: typeof Route = (
+      const handler: typeof Route = (
         await import(file.path.replace(/.ts$|.js$/, ""))
       ).default;
 
-      const handler: Route = new RouteHandler();
-
       // register http methods
-      this.express.get(route, (req, res) => {
-        handler.init(req, res);
-        handler.GET();
-      });
-      this.express.post(route, (req, res) => {
-        handler.init(req, res);
-        handler.POST();
-      });
-      this.express.patch(route, (req, res) => {
-        handler.init(req, res);
-        handler.PATCH();
-      });
-      this.express.delete(route, (req, res) => {
-        handler.init(req, res);
-        handler.DELETE();
-      });
+      for (const entry of Object.entries(handler.prototype.methods)) {
+        const method = entry[0] as HttpMethod;
+        const func = entry[1];
+
+        if (!func) continue;
+
+        switch (method) {
+          case "GET":
+            this.express.get(route, func);
+            break;
+          case "POST":
+            this.express.post(route, func);
+            break;
+          case "PUT":
+            this.express.put(route, func);
+            break;
+          case "PATCH":
+            this.express.patch(route, func);
+            break;
+          case "DELETE":
+            this.express.delete(route, func);
+            break;
+          case "OPTIONS":
+            this.express.options(route, func);
+            break;
+          case "HEAD":
+            this.express.head(route, func);
+            break;
+        }
+        console.log(`${method} ${route}`);
+      }
     } catch (error: any) {
       console.log(error);
       return;
