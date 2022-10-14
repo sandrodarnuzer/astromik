@@ -5,14 +5,13 @@ import { Route } from "./route";
 import Path from "path";
 import { HttpMethod } from "./utils";
 
-const CWD = process.cwd();
-const ROUTES_DIR_PATH = Path.join(CWD, "routes");
+export { Route, Request, Response, Method } from "./route";
 
-export { Route, Method, Request, Response } from "./route";
+const ROUTES_DIRECTORY = Path.join(Path.dirname(process.argv[1]), "routes");
 
 export class Astromik {
   private express: Express;
-  private routeDirectory: string = ROUTES_DIR_PATH;
+  private routeDirectory: string = ROUTES_DIRECTORY;
 
   constructor(express: Express) {
     this.express = express;
@@ -96,11 +95,20 @@ export class Astromik {
           case "POST":
             this.express.post(route, func);
             break;
+          case "PUT":
+            this.express.put(route, func);
+            break;
           case "PATCH":
             this.express.patch(route, func);
             break;
           case "DELETE":
             this.express.delete(route, func);
+            break;
+          case "OPTIONS":
+            this.express.options(route, func);
+            break;
+          case "HEAD":
+            this.express.head(route, func);
             break;
         }
         console.log(`${method} ${route}`);
