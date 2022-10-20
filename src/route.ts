@@ -1,5 +1,4 @@
-import { HttpMethod, ReqResFunction, Methods } from "./utils";
-export { Request, Response } from "express";
+import { ReqResFunction, Methods } from "./utils";
 
 export class Route {
   private GET?: ReqResFunction;
@@ -21,17 +20,4 @@ export class Route {
       HEAD: this.HEAD,
     };
   }
-}
-
-export function Method<T extends ReqResFunction>(method: HttpMethod) {
-  return function (
-    target: Route,
-    key: string | symbol,
-    descriptor: TypedPropertyDescriptor<T>
-  ): void {
-    const original = descriptor.value;
-    Object.defineProperty(target, method, {
-      value: original,
-    });
-  };
 }

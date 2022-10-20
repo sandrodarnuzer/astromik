@@ -5,7 +5,10 @@ import { Route } from "./route";
 import Path from "path";
 import { HttpMethod } from "./utils";
 
-export { Route, Request, Response, Method } from "./route";
+export { Route } from "./route";
+export { Request, Response, NextFunction } from "./utils";
+export { Method } from "./method";
+export { Middleware } from "./middleware";
 
 const ROUTES_DIRECTORY = Path.join(Path.dirname(process.argv[1]), "routes");
 
