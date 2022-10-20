@@ -6,6 +6,9 @@
   "scripts": {
     "build": "tsc -p ."
   },
+  "bin": {
+    "astromik": "./bin/astromik"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sandrodarnuzer/astromik.git"
