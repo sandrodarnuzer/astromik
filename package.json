@@ -1,6 +1,6 @@
 {
   "name": "astromik",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Backend framework based on express",
   "main": "./dist/index.js",
   "scripts": {
