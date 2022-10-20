@@ -1,7 +1,7 @@
 {
   "name": "astromik",
   "version": "0.1.1",
-  "description": "backend framework based on express",
+  "description": "Backend framework based on express",
   "main": "./dist/index.js",
   "scripts": {
     "build": "tsc -p ."
