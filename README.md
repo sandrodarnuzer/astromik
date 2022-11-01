@@ -1,4 +1,7 @@
-# Astromik
+<p align="center">
+  <img alt="logo" src="logo.png" width="128px" />
+  <h1 align="center">Astromik</h1>
+</p>
 
 Backend framework based on express with filesystem routing.
 
