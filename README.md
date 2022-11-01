@@ -4,13 +4,7 @@ Backend framework based on express with filesystem routing.
 
 ## Setup
 
-### Installation
-
-`npm install -g astromik`
-
-### Initialize project
-
-`astromik init`
+`npm init astromik`
 
 ## Usage
 
