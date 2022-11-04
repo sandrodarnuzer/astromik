@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sandrodarnuzer/astromik.git"
+    "url": "git+https://github.com/sndrnz/astromik.git"
   },
   "author": "Sandro Darnuzer",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/sandrodarnuzer/astromik/issues"
+    "url": "https://github.com/sndrnz/astromik/issues"
   },
-  "homepage": "https://github.com/sandrodarnuzer/astromik#readme",
+  "homepage": "https://github.com/sndrnz/astromik#readme",
   "devDependencies": {
     "@types/express": "^4.17.14",
     "@types/node": "^18.8.4",
