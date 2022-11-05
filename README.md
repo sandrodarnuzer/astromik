@@ -1,6 +1,5 @@
 <p align="center">
-  <img alt="logo" src="logo.png" width="128px" />
-  <h1 align="center">Astromik</h1>
+  <img alt="Astromik" src="https://raw.githubusercontent.com/sndrnz/astromik/main/logo.png" width="256px" />
 </p>
 
 Backend framework based on express with filesystem routing.
