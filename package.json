@@ -4,7 +4,8 @@
   "description": "Backend framework based on express",
   "main": "./dist/index.js",
   "scripts": {
-    "build": "tsc -p ."
+    "build": "tsc -p .",
+    "watch": "tsc --watch -p ."
   },
   "repository": {
     "type": "git",

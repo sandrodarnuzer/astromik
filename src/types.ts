@@ -1,10 +1,7 @@
-import { Request, Response, NextFunction } from "express";
-export type Handler = (req: Request, res: Response) => void;
-export type Middleware = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => void;
+import { Handler } from "express";
+export { Handler } from "express";
+
+export type Middleware = Handler[];
 
 export type HttpMethod =
   | "GET"

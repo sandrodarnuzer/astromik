@@ -5,7 +5,7 @@ import Path from "path";
 import { HttpMethod, Handler, Route, Routes, Middleware } from "./types";
 import Log from "./log";
 
-export { Handler } from "./types";
+export { Handler, Middleware } from "./types";
 
 const ROUTES_DIRECTORY = Path.join(Path.dirname(process.argv[1]), "routes");
 
@@ -25,11 +25,11 @@ export class Astromik {
     };
   }
 
-  public use(handler: Middleware) {
+  public use(handler: Handler) {
     this.express.use(handler);
   }
 
-  private setupRoutes(directory: Directory, root: boolean = false) {
+  private setupRoutes(directory: Directory) {
     // check & create directory
     if (!fs.existsSync(directory.path)) return;
 
@@ -66,23 +66,29 @@ export class Astromik {
       const failedMethods: HttpMethod[] = [];
       for (const method of route.methods) {
         try {
-          const handler: Handler = (await import(method.file)).default;
+          const module = await import(method.file);
+          const handler: Handler | undefined = module.handler;
+
+          if (!handler) throw new Error();
+
+          const middleware: Middleware = module.middleware ?? [];
+
           const path = route.path.replace(/\[/g, ":").replace(/\]/g, "");
           switch (method.method) {
             case "GET":
-              this.express.get(path, handler);
+              this.express.get(path, ...middleware, handler);
               break;
             case "POST":
-              this.express.post(path, handler);
+              this.express.post(path, ...middleware, handler);
               break;
             case "PATCH":
-              this.express.patch(path, handler);
+              this.express.patch(path, ...middleware, handler);
               break;
             case "PUT":
-              this.express.put(path, handler);
+              this.express.put(path, ...middleware, handler);
               break;
             case "DELETE":
-              this.express.delete(path, handler);
+              this.express.delete(path, ...middleware, handler);
               break;
           }
         } catch (error: any) {
@@ -100,7 +106,7 @@ export class Astromik {
   }
 
   public start(port: number, callback?: () => void) {
-    this.setupRoutes(new Directory(this.routeDirectory), true);
+    this.setupRoutes(new Directory(this.routeDirectory));
     this.registerRoutes().then(() => {
       Log.showRoutes(this.routes);
       console.log("\n");
