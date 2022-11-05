@@ -1,9 +1,8 @@
 <p align="center">
-  <img alt="logo" src="logo.png" width="128px" />
-  <h1 align="center">Astromik</h1>
+  <img alt="Astromik" src="https://raw.githubusercontent.com/sndrnz/astromik/main/logo.png" width="256px" />
 </p>
 
-Backend framework based on express with filesystem routing.
+Backend framework based on express with folder based routing.
 
 ## Setup
 
@@ -11,85 +10,130 @@ Backend framework based on express with filesystem routing.
 
 ## Usage
 
+### TS (Recommended)
+
+src/main.ts
+
 ```ts
-import express from "express";
 import { Astromik } from "astromik";
 
-// create express app
-const app = express();
+const server = new Astromik();
 
-// create astromik server
-const server = new Astromik(app);
-server.start(4000, () => console.log("Ready"));
+server.start(4000, () => console.log("Server started..."));
+```
+
+### JS
+
+src/main.js
+
+```js
+const { Astromik } = require("astromik");
+
+const server = new Astromik();
+
+server.start(4000, () => console.log("Server started..."));
 ```
 
 ## Routing
 
-Routing is based on the filesystem so it mirrors the filestructure in the **src/routes** folder.
+Routing is based on the folder structure in the **src/routes** folder.
+Each folder or subfolder represents the route it listens to and
 
-For example the route **/** would go to the file **src/routes/index.ts** and **/user/login** would go to the file **src/routes/user/login.ts**
+For example to create a get route for **/login**, you create a folder called 'login' in **src/routes**. Within that folder you create a file named _get.ts_ or _get.js_. Note that the filename corresponds to the HTTP Method you want to register.
 
-### Basic routes
+Supported methods: _GET, POST, PATCH, PUT, DELETE_
 
-src/routes/index.ts
+You simply export a function named _handler_ which gets called when a request for this specific route comes in. This function is exact like the handler function you would use in Express.
+
+### TS (Recommended)
+
+src/routes/get.ts
 
 ```ts
-import { Route, Method, Request, Response } from "astromik";
+import { Handler } from "astromik";
 
-// export default class which extends 'Route'
-export default class extends Route {
-  // Specify HTTP Method with the '@Method' decorator
-  @Method("GET")
-  home(req: Request, res: Response) {
-    // access request and response object just like in express
-    res.send("Hello world");
-  }
-}
+export const handler: Handler = (req, res) => {
+  res.send("Hello World!");
+};
 ```
 
-### Dynamic routes
+### JS
 
-Dynamic routes are supported with the following naming schema: [*paramName*].ts.
-A variable with the same name can then be accessed on the **params** object on the **req** variable.
+src/routes/get.js
 
-src/routes/[id].ts
+```js
+module.exports.handler = (req, res) => {
+  res.send("Hello World!");
+};
+```
+
+## Dynamic routing
+
+For dynamic routing you name the folder with the following pattern: **[_param_]**, and then you can access the variable on the Request object, just like in Express.
+
+For example, you create a folder: **src/routes/[id]**, you can then access the _id_ parameter with:
+
+`const id = req.params.id`
+
+### TS (Recommended)
+
+src/routes/[id]/get.ts
 
 ```ts
-import { Route, Method, Request, Response } from "astromik";
+import { Handler } from "astromik";
 
-export default class extends Route {
-  @Method("GET")
-  home(req: Request, res: Response) {
-    // access the dynamic value 'id'
-    res.send(`You entered: ${req.params.id}`);
-  }
-}
+export const handler: Handler = (req, res) => {
+  const id = req.params.id;
+  res.send("Your id: ", id);
+};
+```
+
+### JS
+
+src/routes/[id]/get.js
+
+```js
+module.exports.handler = (req, res) => {
+  const id = req.params.id;
+  res.send("Your id: ", id);
+};
 ```
 
 ## Middleware
 
-Middleware can be used with the **@Middleware** decorator. It requires a function very similar to Express middleware functions which takes in _req_, _res_ and _next_, and it behaves pretty much the same like Express.
+To use middleware on your routes, you can export an array called _middleware_ which contains one or more handler functions.
+
+**Note:** When you define a middleware handler function and don't send back any response, you need to call the **next** function, otherwise it will get stuck and won't execute any other handlers after this.
+
+### TS (Recommended)
 
 ```ts
-import {
-  Route,
-  Method,
-  Request,
-  Response,
-  Middleware,
-  NextFunction,
-} from "astromik";
+import { Handler, Middleware } from "astromik";
 
-function logger(req: Request, res: Response, next: NextFunction) {
-  console.log("Hello from middleware!");
+// middleware funcion
+const logger: Handler = (req, res, next) => {
+  console.log("Hello from middelware!");
   next();
-}
+};
 
-export default class extends Route {
-  @Method("GET")
-  @Middleware(logger)
-  home(req: Request, res: Response) {
-    res.send("Hello world");
-  }
-}
+export const middleware = [logger];
+
+export const handler = (req, res) => {
+  res.send("Hello World!");
+};
+```
+
+### JS
+
+```js
+const logger = (req, res, next) => {
+  console.log("Hello from middelware!");
+  next();
+};
+
+module.exports.middleware = [logger];
+
+module.exports.handler = (req, res) => {
+  res.send("Hello World!");
+};
 ```
