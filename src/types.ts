@@ -1,5 +1,5 @@
 import { Handler } from "express";
-export { Handler } from "express";
+export { Handler, Response, Request, NextFunction } from "express";
 
 export type Middleware = Handler[];
 

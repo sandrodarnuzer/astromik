@@ -5,11 +5,20 @@ import Path from "path";
 import { HttpMethod, Handler, Route, Routes, Middleware } from "./types";
 import Log from "./log";
 
-export { Handler, Middleware } from "./types";
+export { json, text, raw, urlencoded } from "body-parser";
+export { Handler, Middleware, Request, Response, NextFunction } from "./types";
 
 const ROUTES_DIRECTORY = Path.join(Path.dirname(process.argv[1]), "routes");
 
-const methods: HttpMethod[] = ["GET", "POST", "PATCH", "PUT", "DELETE"];
+const methods: HttpMethod[] = [
+  "GET",
+  "POST",
+  "PATCH",
+  "PUT",
+  "DELETE",
+  "OPTIONS",
+  "HEAD",
+];
 
 export class Astromik {
   public express: Express;
@@ -89,6 +98,12 @@ export class Astromik {
               break;
             case "DELETE":
               this.express.delete(path, ...middleware, handler);
+              break;
+            case "OPTIONS":
+              this.express.options(path, ...middleware, handler);
+              break;
+            case "HEAD":
+              this.express.head(path, ...middleware, handler);
               break;
           }
         } catch (error: any) {

@@ -7,6 +7,9 @@
     "build": "tsc -p .",
     "watch": "tsc --watch -p ."
   },
+  "files": [
+    "./dist"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sndrnz/astromik.git"
