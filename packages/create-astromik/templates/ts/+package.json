@@ -19,6 +19,6 @@
     "nodemon": "^2.0.20"
   },
   "dependencies": {
-    "astromik": "^0.3.1"
+    "astromik": "~VERSION~"
   }
 }
