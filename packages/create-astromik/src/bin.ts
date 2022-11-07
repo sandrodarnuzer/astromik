@@ -47,10 +47,10 @@ import {
     const files = await readdir(directory);
 
     for (const file of files) {
-      if (file === "package.json") {
+      if (file === "+package.json") {
         const content = (await readFile(join(directory, file))).toString();
         await writeFile(
-          join(projectDir, file),
+          join(projectDir, "package.json"),
           content.replace("~NAME~", name)
         );
       } else {
