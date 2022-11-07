@@ -7,8 +7,6 @@ import {
   mkdir,
   readdir,
   pathExists,
-  readJson,
-  writeJson,
   readFile,
   writeFile,
 } from "fs-extra";
@@ -31,6 +29,8 @@ import {
     },
   ]);
 
+  const ASTROMIK_VERSION = "^0.3.1";
+
   const currentDir = cwd();
   const templatesDir = join(__dirname, "..", "templates");
 
@@ -51,7 +51,7 @@ import {
         const content = (await readFile(join(directory, file))).toString();
         await writeFile(
           join(projectDir, "package.json"),
-          content.replace("~NAME~", name)
+          content.replace("~NAME~", name).replace("~VERSION~", ASTROMIK_VERSION)
         );
       } else {
         await copy(
