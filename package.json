@@ -7,7 +7,8 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "turbo build"
+    "build": "turbo build",
+    "watch": "turbo watch"
   },
   "author": "",
   "license": "MIT",
