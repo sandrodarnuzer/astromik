@@ -1,0 +1,35 @@
+{
+  "name": "create-astromik",
+  "version": "0.3.2",
+  "description": "create astromik project",
+  "scripts": {
+    "build": "tsc -p .",
+    "watch": "tsc --watch -p ."
+  },
+  "files": [
+    "dist",
+    "templates"
+  ],
+  "bin": "create-astromik",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sndrnz/astromik.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sndrnz/astromik/issues"
+  },
+  "homepage": "https://github.com/sndrnz/astromik#readme",
+  "devDependencies": {
+    "@types/fs-extra": "^9.0.13",
+    "@types/node": "^18.11.9",
+    "@types/prompts": "^2.4.1",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "fs-extra": "^10.1.0",
+    "kleur": "^4.1.5",
+    "prompts": "^2.4.2"
+  }
+}

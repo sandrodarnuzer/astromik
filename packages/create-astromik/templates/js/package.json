@@ -1,0 +1,20 @@
+{
+  "name": "~NAME~",
+  "version": "1.0.0",
+  "description": "Another Astromik app",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "node src/main.js",
+    "build": "tsc -p .",
+    "dev": "nodemon src/main.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  },
+  "dependencies": {
+    "astromik": "^0.3.1"
+  }
+}
