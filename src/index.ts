@@ -44,6 +44,7 @@ export class Astromik {
 
     const path = directory.path
       .replace(this.routeDirectory, "/")
+      .replace("\\", "/")
       .replace(/(\/\/)/, "/");
 
     const route: Route = {
