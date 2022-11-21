@@ -10,6 +10,7 @@ import {
   readFile,
   writeFile,
 } from "fs-extra";
+import { version } from "../package.json";
 
 (async () => {
   const response = await prompts([
@@ -29,7 +30,7 @@ import {
     },
   ]);
 
-  const ASTROMIK_VERSION = "^0.3.1";
+  const ASTROMIK_VERSION = `^${version}`;
 
   const currentDir = cwd();
   const templatesDir = join(__dirname, "..", "templates");
