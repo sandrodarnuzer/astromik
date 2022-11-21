@@ -8,11 +8,13 @@
   ],
   "scripts": {
     "build": "turbo build",
-    "watch": "turbo watch"
+    "watch": "turbo watch",
+    "release": "turbo build && changeset publish"
   },
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@changesets/cli": "^2.25.2",
     "turbo": "^1.6.3"
   }
 }
