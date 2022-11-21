@@ -1,0 +1,33 @@
+{
+  "name": "astromik",
+  "version": "0.3.3",
+  "description": "Backend framework based on express",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsup src --dts",
+    "watch": "npm run build -- --watch"
+  },
+  "files": [
+    "./dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sndrnz/astromik.git"
+  },
+  "author": "Sandro Darnuzer",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sndrnz/astromik/issues"
+  },
+  "homepage": "https://github.com/sndrnz/astromik#readme",
+  "devDependencies": {
+    "@types/express": "^4.17.14",
+    "@types/node": "^18.8.4",
+    "tsup": "^6.4.0",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "kleur": "^4.1.5"
+  }
+}
