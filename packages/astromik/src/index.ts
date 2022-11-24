@@ -58,7 +58,7 @@ export class Astromik {
       }
 
       const methodName = item.name
-        .replace(/(.ts)$|(.js)$/, "")
+        .replace(/(\..+)?((\.ts)$|(\.js)$)/, "")
         .toUpperCase() as HttpMethod;
       if (!methods.includes(methodName)) continue;
 
@@ -67,6 +67,8 @@ export class Astromik {
         file: item.path,
       });
     }
+
+    if (route.methods.length < 1) return;
     if (route.path.match(/\[.+\]/)) this.routes.dynamic.push(route);
     else this.routes.normal.push(route);
   }
