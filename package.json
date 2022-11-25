@@ -9,7 +9,7 @@
   "scripts": {
     "build": "turbo build",
     "watch": "turbo watch",
-    "release": "turbo build && changeset publish"
+    "release": "changeset publish"
   },
   "author": "",
   "license": "MIT",
