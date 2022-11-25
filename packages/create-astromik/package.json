@@ -11,6 +11,9 @@
     "templates"
   ],
   "bin": "create-astromik",
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sndrnz/astromik.git"
